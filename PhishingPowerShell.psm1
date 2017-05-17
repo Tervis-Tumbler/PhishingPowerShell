@@ -70,8 +70,6 @@ function Install-PhishingWebsiteService {
         Invoke-Command -ComputerName $ComputerName -ScriptBlock {
             nssm install PhishingWebsite dotnet "$Using:WebsiteDirectory\asp.netcore.dll"
             nssm set PhishingWebsite AppDirectory $Using:WebsiteDirectory
-            #Start-Process nssm "install PhishingWebsite dotnet $Using:WebsiteDirectory\asp.netcore.dll" 
-            #Start-Process nssm "set PhishingWebsite Start SERVICE_DEMAND_START" 
         }
     }
 }
@@ -137,6 +135,23 @@ function Get-PhishingWebsiteHarvestedEmails {
         Get-Content | 
         where {$_ -match "request"} | 
         where {$_ -match "security/validation"} |
-        Select-StringBetween -After "http://inf-phishing01/security/validation/" -Before "  "
+        Select-StringBetween -After "security/validation/" -Before "  "
     }
+}
+
+function Invoke-PhishingWebsiteLogRollover {
+    param (
+        [Parameter(ValueFromPipelineByPropertyName)]$ComputerName
+    )
+    begin {
+        $WebsiteDirectory = Get-PhishingWebsiteRoot
+    }
+    process {
+        Stop-ServiceOnNode -ComputerName $ComputerName -Name PhishingWebsite
+        $LogDirectoryRemote = "$WebsiteDirectory\logs" | ConvertTo-RemotePath -ComputerName $ComputerName
+        $LogFiles = Get-ChildItem -Path $LogDirectoryRemote -File
+        $ArchiveDirectory = New-Item -ItemType Directory -Path $LogDirectoryRemote -Name $(Get-Date -Format -- FileDateTime)
+        $LogFiles | Move-Item -Destination $ArchiveDirectory
+        Start-ServiceOnNode -ComputerName $ComputerName -Name PhishingWebsite
+    } 
 }
