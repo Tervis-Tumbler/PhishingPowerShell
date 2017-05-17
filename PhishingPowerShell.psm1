@@ -221,7 +221,7 @@ Dear customer,<br>
             <p class="MsoNormal">
                 Thank you,<o:p></o:p></p>
             <p class="MsoNormal">
-                Microsoft Office 365 Reporting<o:p></o:p></p>
+                Microsoft Office 365<o:p></o:p></p>
 &nbsp;</td>
 	</tr>
 </table>
