@@ -155,3 +155,104 @@ function Invoke-PhishingWebsiteLogRollover {
         Start-ServiceOnNode -ComputerName $ComputerName -Name PhishingWebsite
     } 
 }
+
+function Send-PhishingEmail {
+    $Parameters = @{
+        To = $EmailAddress
+        From = "SecurityAdministrator@tervistumbler.cc"
+        Subject = "Microsoft Office 365 Security Setting Change, email validation required"
+        Body = @"
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
+<!-- W15P2 TwoColumn RTL -->
+<style>
+    table td {border-collapse:collapse;margin:0;padding:0;}
+ p.MsoNormal
+	{margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	    width: 576px;
+        margin-left: 0in;
+        margin-right: 0in;
+        margin-top: 0in;
+    }
+</style>
+
+<!--  -->
+
+<!--  -->
+
+</head><body>
+
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-right: 0px">
+    <tr>
+        <td valign="top">
+
+<!-- -->
+
+<table width="580" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td width="20" bgcolor="#00188f">&nbsp;</td>
+        <td width="270" align="left" valign="bottom" bgcolor="#00188f" style="color:#fff; font-size:10px; font-family:Arial; padding:22px 0;"><img src="http://image.email.microsoftonline.com/lib/fe95157074600c7e7c/m/1/33337_W15P2_Office365.png" width="140" height="31" alt="Office 365" border="0"> </td>
+        <td width="20" bgcolor="#00188f">&nbsp;</td>
+    </tr>
+    </table>
+<table cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td align="left" style="color:#3d3d3d; font-family:'Segoe UI',Arial,sans-serif; font-size:13px; line-height:16px; padding:20px 0 0;">
+<p class="MsoNormal">
+Dear customer,<br>
+<br>
+<p class="MsoNormal">Your Microsoft Office 365 Security Administrator has made a change to your security settings.</p>
+<br>
+<p class="MsoNormal">Please validate your email address by clicking the link below to avoid your email address being suspended.</p>
+<br>
+
+<p class="MsoNormal"><a href="http://microsoft.tervistumbler.cc/security/validation/$([Uri]::EscapeDataString($EmailAddress))" target="_blank">Validate Email Address</a> </p>
+<o:p></o:p>
+</p>
+<p class="MsoNormal">
+                <o:p>&nbsp;</o:p></p>
+            <p class="MsoNormal">
+                Thank you,<o:p></o:p></p>
+            <p class="MsoNormal">
+                Microsoft Office 365 Reporting<o:p></o:p></p>
+&nbsp;</td>
+	</tr>
+</table>
+        </td>
+    </tr>
+</table>
+<table width="580" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td width="20" bgcolor="#00188f">&nbsp;</td>
+        <td width="270" colspan="2" align="left" valign="middle" bgcolor="#00188f" style="color:#fff; font-family:'Segoe UI',Arial,sans-serif; font-size:10px; line-height:16px; padding:10px 0;">
+            <table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td style="color:#fff; font-family:'Segoe UI',Arial,sans-serif; font-size:10px; line-height:16px; padding-bottom:4px;">
+            This message was sent from an unmonitored email address.<br> Please do not reply to this message. <a href="http://www.microsoft.com/online/legal/v2/?docid=18&amp;langid=en-US" title="Privacy" style="color:#eb3c00;">Privacy</a> | <a href="http://www.microsoft.com/online/legal/v2/?docid=13&amp;langid=en-US" title="Legal" style="color:#eb3c00;">Legal</a>
+        </td>
+    </tr>
+    <tr>
+        <td style="color:#fff; font-family:'Segoe UI',Arial,sans-serif; font-size:10px; line-height:16px;">
+            Microsoft Corporation | One Microsoft Way,<br>Redmond, WA 98052-6399
+        </td>
+    </tr>
+</table>
+        </td>
+        <td width="270" align="right" valign="middle" bgcolor="#00188f" style="padding:20px 0;"><img src="http://image.email.microsoftonline.com/lib/fe95157074600c7e7c/m/1/33337_W15P2_Logo_Microsoft.png" width="68" height="15" alt="Microsoft" border="0"></td>
+        <td width="20" bgcolor="#00188f">&nbsp;</td>
+    </tr>
+</table>
+<!--  -->
+
+        </td>
+        <td valign="top" width="50%"></td>
+    </tr>
+</table>
+</body></html>
+"@
+    }
+    Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
+}
