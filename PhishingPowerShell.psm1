@@ -157,11 +157,15 @@ function Invoke-PhishingWebsiteLogRollover {
 }
 
 function Send-PhishingEmail {
-    $Parameters = @{
-        To = $EmailAddress
-        From = "SecurityAdministrator@tervistumbler.cc"
-        Subject = "Microsoft Office 365 Security Setting Change, email validation required"
-        Body = @"
+    param (
+        [Parameter(Mandatory,ValueFromPipeline)]$EmailAddress
+    )
+    process {
+        $Parameters = @{
+            To = $EmailAddress
+            From = "SecurityAdministrator@tervistumbler.cc"
+            Subject = "Microsoft Office 365 Security Setting Change, email validation required"
+            Body = @"
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
 <!-- W15P2 TwoColumn RTL -->
@@ -253,6 +257,7 @@ Dear customer,<br>
 </table>
 </body></html>
 "@
+        }
+        Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
     }
-    Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
 }
