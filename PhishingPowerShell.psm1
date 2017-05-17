@@ -90,7 +90,12 @@ function Remove-PhishingWebsiteService {
 }
 
 function Get-PhishingWebsiteService {
-    Get-Service -ComputerName inf-phishing01 phishingwebsite
+    param (
+        [Parameter(ValueFromPipelineByPropertyName)]$ComputerName
+    )
+    process {
+        Get-Service -ComputerName $ComputerName phishingwebsite
+    }
 }
 
 function Get-PhishingWebsiteProcess {
