@@ -23,7 +23,7 @@ function New-PhishingSiteFirewallRules {
     }
 }
 
-function Get-EmailAddressesToPhish {
+function Get-MailboxEmailAddressesToPhish {
     $Mailbox = Get-O365Mailbox |
     Add-Member -MemberType ScriptProperty -Name EmailAddressObjects -Value {
         foreach ($EmailAddress in $this.EmailAddresses) {
@@ -38,6 +38,28 @@ function Get-EmailAddressesToPhish {
     $SMTPAddresses = $Mailbox.EmailAddressObjects | 
     where type -EQ smtp |
     where Address -Match "Tervis.com"
+}
+
+function Get-GroupEmailAddressesToPhish {
+    $Mailbox = Get-O365Mailbox |
+    Add-Member -MemberType ScriptProperty -Name EmailAddressObjects -Value {
+        foreach ($EmailAddress in $this.EmailAddresses) {
+            $EmailAddressObjectParts = $EmailAddress -split ":"
+            [PSCustomObject]@{
+                Type = $EmailAddressObjectParts[0]
+                Address = $EmailAddressObjectParts[1]
+            }
+        }
+    } -PassThru
+
+    $SMTPAddresses = $Mailbox.EmailAddressObjects | 
+    where type -EQ smtp |
+    where Address -Match "Tervis.com"
+}
+
+function Get-MailboxEmailAddressesToPhish {
+    Get-MailboxEmailAddressesToPhish
+
 }
 
 function Get-PhishingWebsiteRoot {
@@ -164,7 +186,7 @@ function Send-PhishingEmail {
         $Parameters = @{
             To = $EmailAddress
             From = "SecurityAdministrator@tervistumbler.cc"
-            Subject = "Microsoft Office 365 Security Setting Change, email validation required"
+            Subject = "Microsoft Office 365 Security Setting Change, Email Validation Required"
             Body = @"
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
@@ -198,7 +220,7 @@ function Send-PhishingEmail {
 <table width="580" cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td width="20" bgcolor="#00188f">&nbsp;</td>
-        <td width="270" align="left" valign="bottom" bgcolor="#00188f" style="color:#fff; font-size:10px; font-family:Arial; padding:22px 0;"><img src="http://image.email.microsoftonline.com/lib/fe95157074600c7e7c/m/1/33337_W15P2_Office365.png" width="140" height="31" alt="Office 365" border="0"> </td>
+        <td width="270" align="left" valign="bottom" bgcolor="#00188f" style="color:#fff; font-size:10px; font-family:Arial; padding:22px 0;"><img src="http://microsoft.tervistumbler.cc/33337_W15P2_Office365.png" width="140" height="31" alt="Office 365" border="0"> </td>
         <td width="20" bgcolor="#00188f">&nbsp;</td>
     </tr>
     </table>
@@ -245,7 +267,7 @@ Dear customer,<br>
     </tr>
 </table>
         </td>
-        <td width="270" align="right" valign="middle" bgcolor="#00188f" style="padding:20px 0;"><img src="http://image.email.microsoftonline.com/lib/fe95157074600c7e7c/m/1/33337_W15P2_Logo_Microsoft.png" width="68" height="15" alt="Microsoft" border="0"></td>
+        <td width="270" align="right" valign="middle" bgcolor="#00188f" style="padding:20px 0;"><img src="http://microsoft.tervistumbler.cc/33337_W15P2_Logo_Microsoft.png" width="68" height="15" alt="Microsoft" border="0"></td>
         <td width="20" bgcolor="#00188f">&nbsp;</td>
     </tr>
 </table>
