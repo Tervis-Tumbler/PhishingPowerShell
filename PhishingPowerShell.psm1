@@ -37,24 +37,11 @@ function Get-MailboxEmailAddressesToPhish {
 
     $SMTPAddresses = $Mailbox.EmailAddressObjects | 
     where type -EQ smtp |
-    where Address -Match "Tervis.com"
+    where Address -Match "Tervis.com" |
+    select -ExpandProperty Address
 }
 
 function Get-GroupEmailAddressesToPhish {
-    $Mailbox = Get-O365Mailbox |
-    Add-Member -MemberType ScriptProperty -Name EmailAddressObjects -Value {
-        foreach ($EmailAddress in $this.EmailAddresses) {
-            $EmailAddressObjectParts = $EmailAddress -split ":"
-            [PSCustomObject]@{
-                Type = $EmailAddressObjectParts[0]
-                Address = $EmailAddressObjectParts[1]
-            }
-        }
-    } -PassThru
-
-    $SMTPAddresses = $Mailbox.EmailAddressObjects | 
-    where type -EQ smtp |
-    where Address -Match "Tervis.com"
 }
 
 function Get-MailboxEmailAddressesToPhish {
@@ -280,6 +267,10 @@ Dear customer,<br>
 </body></html>
 "@
         }
-        Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
+        Try {
+            Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
+        } catch {
+            $Global:Failures += $Parameters
+        }
     }
 }
