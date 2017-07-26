@@ -2,8 +2,8 @@
     param (
         $EnvironmentName
     )
-    Invoke-ClusterApplicationProvision -ClusterApplicationName Phishing -EnvironmentName $EnvironmentName
-    $Nodes = Get-TervisClusterApplicationNode -ClusterApplicationName Phishing -EnvironmentName $EnvironmentName
+    Invoke-ApplicationProvision -ApplicationName Phishing -EnvironmentName $EnvironmentName
+    $Nodes = Get-TervisApplicationNode -ApplicationName Phishing -EnvironmentName $EnvironmentName
     $Nodes | New-PhishingSiteFirewallRules
     $Nodes | Install-PhishingWebsiteService
     $Nodes | Start-ServiceOnNode -Name PhishingWebsite
