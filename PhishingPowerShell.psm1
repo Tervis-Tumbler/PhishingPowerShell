@@ -268,7 +268,7 @@ Dear customer,<br>
 "@
         }
         Try {
-            Send-MailMessage -SmtpServer cudaspam.tervis.com -BodyAsHtml @Parameters
+            Send-TervisMailMessage -BodyAsHtml @Parameters
         } catch {
             $Global:Failures += $Parameters
         }
